@@ -62,7 +62,7 @@ jobs:
           token: ${{secrets.REPO_TOKEN}}
 
       - name: Install dependencies
-        run: sudo apt-get install -y yq moreutils
+        run: sudo apt-get install -y jq moreutils
 
       - name: Update image field
         run: jq ".containerDefinitions[0].image=\"$APP_IMAGE:sha-$(git rev-parse --short $GITHUB_SHA)\"" apps/service-alpha/dev.json | sponge apps/service-alpha/dev.json
@@ -89,7 +89,7 @@ jobs:
           token: ${{secrets.REPO_TOKEN}}
 
       - name: Install dependencies
-        run: sudo apt-get install -y yq moreutils
+        run: sudo apt-get install -y jq moreutils
 
       - name: Update image field
         run: jq ".containerDefinitions[0].image=\"$APP_IMAGE:${GITHUB_REF#refs/*/}\"" apps/service-alpha/test.json | sponge apps/service-alpha/test.json
