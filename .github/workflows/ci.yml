@@ -12,6 +12,7 @@ on:
 env:
   APP_NAME: ecs-demo-app1
   APP_IMAGE: myspotontheweb/ecs-demo-app1
+  SERVICE_NAME: service-alpha
   GITOPS_REPO: myspotontheweb/ecs-workloads
 
 jobs:
@@ -65,7 +66,7 @@ jobs:
         run: sudo apt-get install -y jq moreutils
 
       - name: Update image field
-        run: jq ".containerDefinitions[0].image=\"$APP_IMAGE:sha-$(git rev-parse --short $GITHUB_SHA)\"" apps/service-alpha/dev.json | sponge apps/service-alpha/dev.json
+        run: bin/update $SERVICE_NAME $APP_IMAGE:sha-$(git rev-parse --short $GITHUB_SHA) dev
 
       - name: Commit changes
         run: |
@@ -92,7 +93,7 @@ jobs:
         run: sudo apt-get install -y jq moreutils
 
       - name: Update image field
-        run: jq ".containerDefinitions[0].image=\"$APP_IMAGE:${GITHUB_REF#refs/*/}\"" apps/service-alpha/test.json | sponge apps/service-alpha/test.json
+        run: bin/update $SERVICE_NAME $APP_IMAGE:${GITHUB_REF#refs/*/} test
 
       - name: Commit changes
         run: |
